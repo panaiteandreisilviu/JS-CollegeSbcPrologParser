@@ -1,0 +1,13 @@
+.hover-cursor-hand:hover{
+    cursor: hand;
+    cursor: pointer;
+}
+
+.table-action{
+    margin-right:3px;
+}
+
+.run-btn{
+    top:10px;
+    position: relative;
+}
