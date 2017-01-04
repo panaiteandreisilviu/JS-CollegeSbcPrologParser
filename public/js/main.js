@@ -2,19 +2,20 @@
  * Created by silviu on 12/12/16.
  */
 
-// --------------- Constants and Vars ---------------
+// __________________ Constants and Vars __________________
+
 var FACTS = 'FACTS';
 var RULES = 'RULES';
-var $prologRules = $("#prologRules");
-// --------------- Initial Data ---------------
+
+// __________________ Initial Data __________________
 
 var prologData = {
-    facts:['regula1', 'regula2'],
+    facts:[],
     rules: [],
     interpretedData :""
 };
 
-// --------------- XML Parsing ---------------
+// __________________ XML Parsing __________________
 
 $(function(){
     var xmlDoc;
@@ -35,19 +36,27 @@ $(function(){
     }
     function getPrologRules(xmlDoc){
         var $facts = $(xmlDoc).find(FACTS).children();
-        $facts.each(function(index, item){
-            var factName = $(item).prop('tagName');
-            console.log(factName);
-            prologData.interpretedData += factName + '\n';
+        $facts.each(function(index, fact){
+
+            var factName = $(fact).prop('tagName');
+            factName = factName.capitalize();
+
+            var factParams = [];
+            $(fact).children().each(function(indexTwo, item){
+                var factParam = $(item).text();
+                factParams.push(factParam);
+            });
+            factParams = factParams.join(', ');
+            var interpretedFact = factName + '(' + factParams + ')' + '.';
+
+            prologData.interpretedData += interpretedFact + '\n';
         });
-
-        console.log(prologData.interpretedData);
     }
-
-
 });
 
-// --------------- Vue Components ---------------
+// __________________ Vue Components __________________
+
+
 
 var Table = {
     template : "#table-template",
@@ -59,7 +68,7 @@ var Panel = {
     props: ["title","subtitle"]
 };
 
-// --------------- Vue JS ---------------
+// __________________ Vue JS __________________
 
 var vue = new Vue({
     el: '#app',
@@ -97,4 +106,10 @@ var vue = new Vue({
         }
     }
 });
+
+
+// __________________ MISC __________________
+String.prototype.capitalize = function(){
+    return this.charAt(0).toUpperCase()  + this.slice(1).toLowerCase();
+};
 
