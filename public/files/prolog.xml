@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<FACTS>
-    <PARENT>
-        <ITEM>Bogdan</ITEM>
-        <ITEM>Ilie</ITEM>
-    </PARENT>
-    <MASCULIN>
-        <ITEM>Bogdan</ITEM>
-    </MASCULIN>
-    <MASCULIN>
-        <ITEM>Ilie</ITEM>
-    </MASCULIN>
-    <FEMININ>
-        <ITEM>Ioana</ITEM>
-    </FEMININ>
-    
-</FACTS>
+<DOCUMENT>
+    <FACTS>
+        <PARENT>
+            <ITEM>Bogdan</ITEM>
+            <ITEM>Ilie</ITEM>
+        </PARENT>
+        <MASCULIN>
+            <ITEM>Bogdan</ITEM>
+        </MASCULIN>
+        <MASCULIN>
+            <ITEM>Ilie</ITEM>
+        </MASCULIN>
+        <FEMININ>
+            <ITEM>Ioana</ITEM>
+        </FEMININ>
+    </FACTS>
+    <RULES>
+        <RULE>
+            <RELATION>
+
+            </RELATION>
+            <IF>
+
+            </IF>
+        </RULE>
+    </RULES>
+</DOCUMENT>
+
