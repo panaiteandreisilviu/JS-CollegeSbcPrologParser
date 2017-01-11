@@ -7,9 +7,53 @@
     margin-right:3px;
 }
 
-.run-btn{
-    top:10px;
-    position: relative;
+textarea{
+    resize: none;
+}
+
+#run{
+    bottom:10px;
+    right:25px;
+    position: absolute;
+}
+
+#query{
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#queryHistory{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height:385px;
+    background-color:#fbfbfb;
+}
+
+
+#queryResult{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height:275px;
+    margin-bottom:5px;
+    background-color:#fbfbfb;
+}
+
+.history-item{
+    width:95%;
+    border-bottom:1px solid lightgray;
+    margin: 0 auto 10px;
+    padding:5px;
+    font-size: 12px;
+    white-space: pre;
+}
+
+#prologRulesJson{
+    font-size: 12px;
+    white-space: pre;
+}
+#prologFactsJson{
+    font-size: 12px;
+    white-space: pre;
 }
 
 .full-height{

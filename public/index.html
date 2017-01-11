@@ -213,16 +213,23 @@
                     </div>
 
                     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                        <panel-component title='Queries' subtitle="">
-
-                            <textarea class="form-control" rows="10" readonly></textarea>
-                            <textarea class="form-control" rows="4"></textarea>
-                            <button class="btn btn-primary run-btn pull-right">Run</button>
+                        <panel-component title='Query' subtitle="">
+                            <div id="queryResult" class="form-control"></div>
+                            <textarea id="query" class="form-control" rows="4"></textarea>
+                            <button id="run" class="btn btn-primary btn-sm pull-right">Run</button>
                         </panel-component>
                     </div>
+
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                        <panel-component title='Query history' subtitle="">
+                            <div id="queryHistory" class="form-control"></div>
+                        </panel-component>
+                    </div>
+
                 </div>
 
                 <div class="row">
+
                     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                         <panel-component title='Facts JSON' subtitle="">
                             <textarea id="prologFactsJson" v-model="prologData.factsJson" class="form-control" rows="18" spellcheck="false">

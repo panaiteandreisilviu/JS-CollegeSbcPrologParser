@@ -83,55 +83,76 @@ $(function(){
         });
         return predicate + '(' + varsArray.join(', ') + ')';
     }
+
+
+    // __________________ XML TO JSON __________________
+
+    function factsToJson(xmlDoc){
+        var $facts = $(xmlDoc).find(FACTS).children();
+        $facts.each(function(index, fact) {
+            var jsonFact = {};
+            jsonFact.rule = $(fact).prop('tagName');
+            jsonFact.params = [];
+            $(fact).children().each(function(indexTwo, item){
+                jsonFact.params.push($(item).text());
+            });
+            prologData.factsJson.push(jsonFact);
+        });
+    }
+
+
+    function rulesToJson(xmlDoc){
+        var $rules = $(xmlDoc).find(RULES);
+        $rules.each(function(index, item){
+
+            var then = $(item).find('then').eq(0);
+            var jsonRule = getPredicateAndVariablesJSON(then);
+
+            jsonRule.if = [];
+            var ifRule = $(item).find('if').eq(0);
+            jsonRule.if.push(getPredicateAndVariablesJSON(ifRule));
+
+            var andRules = $(item).find('and');
+            andRules.each(function(indexTwo, andRule){
+                jsonRule.if.push(getPredicateAndVariablesJSON($(andRule)));
+            });
+            prologData.rulesJson.push(jsonRule);
+        });
+    }
+
+    function getPredicateAndVariablesJSON(item){
+        var returnObject = {};
+        returnObject.predicate = $(item).find('predicate').text();
+
+        var variables = $(item).find('variable');
+        returnObject.params = [];
+        variables.each(function(index,variable){
+            returnObject.params.push($(variable).text());
+        });
+
+        return returnObject;
+    }
+
+// __________________ QUERY PARSING__________________
+
+    $("#run").on('click',function(){
+        var $query = $('#query');
+        var prologQuery = $query.val();
+        appendHistoryItem(prologQuery);
+        var queryItems = prologQuery.split(',');
+        console.log(queryItems)
+    });
+
+    function appendHistoryItem(query){
+        var $queryHistory = $('#queryHistory');
+        var $historyItem = $('<div>').addClass('history-item').html(query);
+        $queryHistory.append($historyItem);
+        var scrollHeight = $queryHistory[0].scrollHeight;
+        $queryHistory.scrollTop(scrollHeight);
+    }
+
 });
 
-// __________________ XML TO JSON __________________
-
-function factsToJson(xmlDoc){
-    var $facts = $(xmlDoc).find(FACTS).children();
-    $facts.each(function(index, fact) {
-        var jsonFact = {};
-        jsonFact.rule = $(fact).prop('tagName');
-        jsonFact.params = [];
-        $(fact).children().each(function(indexTwo, item){
-            jsonFact.params.push($(item).text());
-        });
-        prologData.factsJson.push(jsonFact);
-    });
-}
-
-
-function rulesToJson(xmlDoc){
-    var $rules = $(xmlDoc).find(RULES);
-    $rules.each(function(index, item){
-
-        var then = $(item).find('then').eq(0);
-        var jsonRule = getPredicateAndVariablesJSON(then);
-
-        jsonRule.if = [];
-        var ifRule = $(item).find('if').eq(0);
-        jsonRule.if.push(getPredicateAndVariablesJSON(ifRule));
-
-        var andRules = $(item).find('and');
-        andRules.each(function(indexTwo, andRule){
-            jsonRule.if.push(getPredicateAndVariablesJSON($(andRule)));
-        });
-        prologData.rulesJson.push(jsonRule);
-    });
-}
-
-function getPredicateAndVariablesJSON(item){
-    var returnObject = {};
-    returnObject.predicate = $(item).find('predicate').text();
-
-    var variables = $(item).find('variable');
-    returnObject.params = [];
-    variables.each(function(index,variable){
-        returnObject.params.push($(variable).text());
-    });
-
-    return returnObject;
-}
 
 // __________________ Vue Components __________________
 
