@@ -11,3 +11,35 @@
     top:10px;
     position: relative;
 }
+
+.full-height{
+    height:1000px;
+}
+
+.sudoku-cell{
+    display:inline-block;
+    height:50px;
+    width:50px;
+    line-height:50px;
+    border:2px solid gray;
+    margin-right:-2px;
+    margin-bottom:-2px;
+    background-color:rgba(0,0,0,0.05);
+    text-align: center;
+    vertical-align: middle;
+    font-size:20px;
+    font-weight:bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.no-value{
+    background-color:rgba(0,0,0,0.1);
+}
+
+.sudoku-cell:nth-child(3n){
+    margin-right:-1px;
+}
+
+.sudoku-row:nth-child(3n){
+    margin-bottom:-1px;
+}

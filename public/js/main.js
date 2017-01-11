@@ -4,14 +4,16 @@
 
 // __________________ Constants and Vars __________________
 
-var FACTS = 'FACTS';
-var RULES = 'RULES';
+var FACTS = 'Facts';
+var RULES = 'Rule';
 
 // __________________ Initial Data __________________
 
 var prologData = {
     facts:[],
     rules: [],
+    factsJson:[],
+    rulesJson: [],
     interpretedData :""
 };
 
@@ -22,6 +24,8 @@ $(function(){
     getXmlDoc().done(function(data) {
         xmlDoc = data;
         interpretPrologData(xmlDoc);
+        factsToJson(xmlDoc);
+        rulesToJson(xmlDoc);
     });
 
     function getXmlDoc(){
@@ -32,15 +36,16 @@ $(function(){
     }
 
     function interpretPrologData(xmlDoc){
+        getPrologFacts(xmlDoc);
         getPrologRules(xmlDoc);
     }
-    function getPrologRules(xmlDoc){
+
+    function getPrologFacts(xmlDoc){
         var $facts = $(xmlDoc).find(FACTS).children();
         $facts.each(function(index, fact){
 
             var factName = $(fact).prop('tagName');
-            factName = factName.capitalize();
-
+            
             var factParams = [];
             $(fact).children().each(function(indexTwo, item){
                 var factParam = $(item).text();
@@ -51,8 +56,82 @@ $(function(){
 
             prologData.interpretedData += interpretedFact + '\n';
         });
+        prologData.interpretedData += '\n';
+    }
+
+    function getPrologRules(xmlDoc){
+        var $rules = $(xmlDoc).find(RULES);
+        $rules.each(function(index, item){
+            var thenParsedData = getPredicateAndVars($(item).find('then'));
+            thenParsedData += ':- \n';
+            var ifParsedData = getPredicateAndVars($(item).find('if'));
+            var ifAndParsedArray = [ifParsedData];
+            $(item).find('and').each(function(indexTwo,andItem){
+                ifAndParsedArray.push(getPredicateAndVars($(andItem)));
+            });
+            var ifAndParsedData = ifAndParsedArray.join(', \n');
+            prologData.interpretedData += thenParsedData + ifAndParsedData + '.' + '\n\n';
+        });
+    }
+
+    function getPredicateAndVars(item){
+        var predicate = $(item).find('predicate').text();
+        var variables = $(item).find('variable');
+        var varsArray = [];
+        variables.each(function(index,item){
+            varsArray.push($(item).text())
+        });
+        return predicate + '(' + varsArray.join(', ') + ')';
     }
 });
+
+// __________________ XML TO JSON __________________
+
+function factsToJson(xmlDoc){
+    var $facts = $(xmlDoc).find(FACTS).children();
+    $facts.each(function(index, fact) {
+        var jsonFact = {};
+        jsonFact.rule = $(fact).prop('tagName');
+        jsonFact.params = [];
+        $(fact).children().each(function(indexTwo, item){
+            jsonFact.params.push($(item).text());
+        });
+        prologData.factsJson.push(jsonFact);
+    });
+}
+
+
+function rulesToJson(xmlDoc){
+    var $rules = $(xmlDoc).find(RULES);
+    $rules.each(function(index, item){
+
+        var then = $(item).find('then').eq(0);
+        var jsonRule = getPredicateAndVariablesJSON(then);
+
+        jsonRule.if = [];
+        var ifRule = $(item).find('if').eq(0);
+        jsonRule.if.push(getPredicateAndVariablesJSON(ifRule));
+
+        var andRules = $(item).find('and');
+        andRules.each(function(indexTwo, andRule){
+            jsonRule.if.push(getPredicateAndVariablesJSON($(andRule)));
+        });
+        prologData.rulesJson.push(jsonRule);
+    });
+}
+
+function getPredicateAndVariablesJSON(item){
+    var returnObject = {};
+    returnObject.predicate = $(item).find('predicate').text();
+
+    var variables = $(item).find('variable');
+    returnObject.params = [];
+    variables.each(function(index,variable){
+        returnObject.params.push($(variable).text());
+    });
+
+    return returnObject;
+}
 
 // __________________ Vue Components __________________
 

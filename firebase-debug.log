@@ -1,0 +1,42 @@
+[debug] ----------------------------------------------------------------------
+[debug] Command:      node /usr/local/bin/firebase serve
+[debug] CLI Version:  3.2.1
+[debug] Platform:     linux
+[debug] Node Version: v0.10.25
+[debug] Time:         Sat Jan 07 2017 14:38:06 GMT+0200 (EET)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[info] Starting Firebase development server...
+[info] 
+[info] Project Directory: /home/silviu/PhpstormProjects/TemaSBC
+[info] Public Directory: public
+[info] 
+[info] Server listening at: http://localhost:5000
+[debug] ----------------------------------------------------------------------
+[debug] Command:      node /usr/local/bin/firebase serve
+[debug] CLI Version:  3.2.1
+[debug] Platform:     linux
+[debug] Node Version: v0.10.25
+[debug] Time:         Wed Jan 11 2017 19:13:12 GMT+0200 (EET)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[info] Starting Firebase development server...
+[info] 
+[info] Project Directory: /home/silviu/PhpstormProjects/TemaSBC
+[info] Public Directory: public
+[info] 
+[info] Server listening at: http://localhost:5000
+[debug] ----------------------------------------------------------------------
+[debug] Command:      node /usr/local/bin/firebase serve
+[debug] CLI Version:  3.2.1
+[debug] Platform:     linux
+[debug] Node Version: v0.10.25
+[debug] Time:         Wed Jan 11 2017 19:25:38 GMT+0200 (EET)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[info] Starting Firebase development server...
+[info] 
+[info] Project Directory: /home/silviu/PhpstormProjects/TemaSBC
+[info] Public Directory: public
+[info] 
+[info] Server listening at: http://localhost:5000
