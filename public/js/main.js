@@ -91,7 +91,7 @@ $(function(){
         var $facts = $(xmlDoc).find(FACTS).children();
         $facts.each(function(index, fact) {
             var jsonFact = {};
-            jsonFact.rule = $(fact).prop('tagName');
+            jsonFact.predicate = $(fact).prop('tagName');
             jsonFact.params = [];
             $(fact).children().each(function(indexTwo, item){
                 jsonFact.params.push($(item).text());
@@ -139,8 +139,9 @@ $(function(){
         var $query = $('#query');
         var prologQuery = $query.val();
         appendHistoryItem(prologQuery);
-        var queryItems = prologQuery.split(',');
-        console.log(queryItems)
+        var queryElements = parseQuery(prologQuery);
+        processQuery(queryElements);
+
     });
 
     function appendHistoryItem(query){
@@ -151,6 +152,46 @@ $(function(){
         $queryHistory.scrollTop(scrollHeight);
     }
 
+
+    function parseQuery(query){
+        var regex = /([^\(]+)\(([^\(]+)\).?/g;
+        var queryElements = [];
+        while(match = regex.exec(query)){
+            queryElements.push(match);
+        }
+        var processedQuery = [];
+        queryElements.forEach(function(item){
+            item.shift();
+            var queryItem = {};
+            queryItem.predicate = item[0].trim();
+            item[1] = item[1].split(',');
+            queryItem.params = item[1].map(function(elem){
+                return elem.trim();
+            });
+            processedQuery.push(queryItem);
+        });
+        return processedQuery;
+    }
+
+    function processQuery(queryElements){
+        var unknowns = [];
+        queryElements.forEach(function(queryItem){
+            console.log(queryItem);
+            var unifiedFacts = findUnifiedFacts(queryItem);
+            console.log(unifiedFacts);
+        });
+    }
+
+    function findUnifiedFacts(queryItem){
+        var foundFacts = [];
+        prologData.factsJson.forEach(function(item){
+            if(queryItem.predicate == item.predicate && count(queryItem.params) == count(item.params)){
+                foundFacts.push(item);
+            }
+        });
+
+        return foundFacts;
+    }
 });
 
 

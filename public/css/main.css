@@ -33,7 +33,7 @@ textarea{
 #queryResult{
     overflow-y: scroll;
     overflow-x: hidden;
-    height:275px;
+    height:290px;
     margin-bottom:5px;
     background-color:#fbfbfb;
 }
