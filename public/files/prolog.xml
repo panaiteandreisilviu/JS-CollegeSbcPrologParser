@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DOCUMENT>
     <Facts>
+        <friends>
+            <item>bogdan</item>
+            <item>ilie</item>
+            <item>ioana</item>
+        </friends>
+        <friends>
+            <item>bogdan</item>
+            <item>ilie</item>
+            <item>andrei</item>
+        </friends>
         <parent>
             <item>bogdan</item>
             <item>ilie</item>
+        </parent>
+
+        <parent>
+            <item>bogdan</item>
+            <item>ioana</item>
         </parent>
         <male>
             <item>bogdan</item>

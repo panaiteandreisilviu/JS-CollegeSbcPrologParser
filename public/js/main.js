@@ -159,8 +159,10 @@ $(function(){
         while(match = regex.exec(query)){
             queryElements.push(match);
         }
+
         var processedQuery = [];
-        queryElements.forEach(function(item){
+        for(var i = 0; i< queryElements.length; i++){
+            var item = queryElements[i];
             item.shift();
             var queryItem = {};
             queryItem.predicate = item[0].trim();
@@ -169,28 +171,100 @@ $(function(){
                 return elem.trim();
             });
             processedQuery.push(queryItem);
-        });
+        }
         return processedQuery;
     }
 
     function processQuery(queryElements){
-        var unknowns = [];
-        queryElements.forEach(function(queryItem){
-            console.log(queryItem);
-            var unifiedFacts = findUnifiedFacts(queryItem);
-            console.log(unifiedFacts);
-        });
+        var result = true;
+        var primaryElement = queryElements[0];
+        var fixedVars = getFixedVars(primaryElement);
+        var findableVars = getFindableVars(primaryElement);
+
+        console.log(findableVars);
+        console.log(fixedVars);
+        for(var i = 0; i < prologData.factsJson.length; i++){
+            var jumpToNextItem;
+            var databaseItem = prologData.factsJson[i];
+            // Unification
+            if(primaryElement.predicate == databaseItem.predicate && primaryElement.params.length == databaseItem.params.length){
+                // Check FixedVars
+                for(var fixedVar in fixedVars){
+                    if (fixedVars.hasOwnProperty(fixedVar)) {
+                        var fixedIndex = fixedVars[fixedVar].index;
+                        console.log(databaseItem.params[fixedIndex] + ' ' + fixedVar);
+                        if(databaseItem.params[fixedIndex] != fixedVar){
+                            jumpToNextItem = true;
+                            break;
+                        }
+                    }
+                }
+                //Jump to next item if fixed variables are not satisfied
+                if(jumpToNextItem == true){
+                    jumpToNextItem = false;
+                    continue;
+                }
+
+                //console log true if there are no findableVars and no more queryparams
+                // exp: male(andrei)
+
+                //Get findableVars values
+                for(var findableVar in findableVars){
+                    if (findableVars.hasOwnProperty(findableVar)) {
+                        var findableIndex = findableVars[findableVar].index;
+                        var foundItem = databaseItem.params[findableIndex];
+                        findableVars[findableVar].results.push(foundItem);
+                    }
+                }
+            }
+        }
     }
 
     function findUnifiedFacts(queryItem){
         var foundFacts = [];
+        console.log(prologData.factsJson);
         prologData.factsJson.forEach(function(item){
-            if(queryItem.predicate == item.predicate && count(queryItem.params) == count(item.params)){
+            var itemParams = item.params;
+            if(queryItem.predicate == item.predicate && count(queryItem.params) == count(itemParams)){
                 foundFacts.push(item);
             }
         });
 
         return foundFacts;
+    }
+
+    function getFixedVars(item){
+        var result = {};
+        for(var i = 0; i<item.params.length; i++){
+            var firstLetter = item.params[i][0];
+            if(firstLetter == '_'){
+                continue;
+            }
+            if(firstLetter != firstLetter.toUpperCase()){
+                result[item.params[i]] = {
+                    'index': i,
+                    'results':[]
+                };
+            }
+        }
+        return result;
+    }
+
+    function getFindableVars(item){
+        var result = {};
+        for(var i = 0; i<item.params.length; i++){
+            var firstLetter = item.params[i][0];
+            if(firstLetter == '_'){
+                continue;
+            }
+            if(firstLetter == firstLetter.toUpperCase()){
+                result[item.params[i]] = {
+                    'index': i,
+                    'results':[]
+                };
+            }
+        }
+        return result;
     }
 });
 
