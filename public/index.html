@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="css/main.css">
 
 </head>
-<body class="nav-md">
+<body class="nav-sm">
 <div class="container body">
     <div class="main_container" id="app">
             <!-- --------------------- Navigation START--------------------- -->
@@ -214,7 +214,9 @@
 
                     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                         <panel-component title='Query' subtitle="">
-                            <div id="queryResult" class="form-control"></div>
+                            <div id="queryResult" class="form-control">
+                                <div class="query-result-item" v-for="queryResult in prologData.queryResult">{{queryResult}}</div>
+                            </div>
                             <textarea id="query" class="form-control" rows="4">parent(X,_),male(X).</textarea>
                             <button id="run" class="btn btn-primary btn-sm pull-right">Run</button>
                         </panel-component>
@@ -318,7 +320,7 @@
 <!-- iCheck -->
 <script src="node_modules/gentelella/vendors/iCheck/icheck.min.js"></script>
 <!-- Custom Theme Scripts -->
-<script src="node_modules/gentelella/build/js/custom.min.js"></script>
+<script src="node_modules/gentelella/build/js/custom.js"></script>
 
 <script type="application/javascript" src="node_modules/vue/dist/vue.min.js"></script>
 <script type="application/javascript" src="js/main.js"></script>

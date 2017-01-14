@@ -12,3 +12,17 @@
 [info] Public Directory: public
 [info] 
 [info] Server listening at: http://localhost:5000
+[debug] ----------------------------------------------------------------------
+[debug] Command:      node /usr/local/bin/firebase serve
+[debug] CLI Version:  3.2.1
+[debug] Platform:     linux
+[debug] Node Version: v0.10.25
+[debug] Time:         Sat Jan 14 2017 20:06:34 GMT+0200 (EET)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[info] Starting Firebase development server...
+[info] 
+[info] Project Directory: /home/silviu/PhpstormProjects/TemaSBC
+[info] Public Directory: public
+[info] 
+[info] Server listening at: http://localhost:5000

@@ -14,7 +14,8 @@ var prologData = {
     rules: [],
     factsJson:[],
     rulesJson: [],
-    interpretedData :""
+    interpretedData : "",
+    queryResult : []
 };
 
 // __________________ XML Parsing __________________
@@ -141,15 +142,13 @@ $(function(){
         appendHistoryItem(prologQuery);
         var queryElements = parseQuery(prologQuery);
         processQuery(queryElements);
-
+        scrollToBottom();
     });
 
     function appendHistoryItem(query){
         var $queryHistory = $('#queryHistory');
         var $historyItem = $('<div>').addClass('history-item').html(query);
         $queryHistory.append($historyItem);
-        var scrollHeight = $queryHistory[0].scrollHeight;
-        $queryHistory.scrollTop(scrollHeight);
     }
 
 
@@ -176,48 +175,89 @@ $(function(){
     }
 
     function processQuery(queryElements){
-        var result = true;
+        var resultFound = false; // MUST BE SET TRUE IF RESULT FOUND !
+
         var primaryElement = queryElements[0];
         var fixedVars = getFixedVars(primaryElement);
         var findableVars = getFindableVars(primaryElement);
 
         console.log(findableVars);
         console.log(fixedVars);
+        //Go trough all facts (change to all facts + facts derived from rules)
         for(var i = 0; i < prologData.factsJson.length; i++){
-            var jumpToNextItem;
+            var jumpToNextItem = false;
             var databaseItem = prologData.factsJson[i];
             // Unification
             if(primaryElement.predicate == databaseItem.predicate && primaryElement.params.length == databaseItem.params.length){
+
                 // Check FixedVars
                 for(var fixedVar in fixedVars){
                     if (fixedVars.hasOwnProperty(fixedVar)) {
                         var fixedIndex = fixedVars[fixedVar].index;
-                        console.log(databaseItem.params[fixedIndex] + ' ' + fixedVar);
+                        console.log('fixedVarCheck, database: ' + databaseItem.params[fixedIndex] + ' | queryItem: ' + fixedVar);
                         if(databaseItem.params[fixedIndex] != fixedVar){
                             jumpToNextItem = true;
                             break;
                         }
                     }
                 }
-                //Jump to next item if fixed variables are not satisfied
+
+                console.log("jumpToNextItem: " + jumpToNextItem);
+
+                // STOP if there are no findableVariables (must return true or false)
+                var fixedVarCheckOK = !jumpToNextItem;
+
+                console.log(i + ' ' + prologData.factsJson.length + ' ' + fixedVarCheckOK);
+                if (Object.keys(findableVars).length == 0){
+                    if(fixedVarCheckOK){
+                        // Match found, return true
+                        resultFound = true;
+                        prologData.queryResult.push("TRUE");
+                        break;
+                    }
+                }
+
+
+                //Jump to next prolog database item if fixed variables are not satisfied
                 if(jumpToNextItem == true){
                     jumpToNextItem = false;
                     continue;
                 }
 
-                //console log true if there are no findableVars and no more queryparams
-                // exp: male(andrei)
+
 
                 //Get findableVars values
                 for(var findableVar in findableVars){
                     if (findableVars.hasOwnProperty(findableVar)) {
                         var findableIndex = findableVars[findableVar].index;
                         var foundItem = databaseItem.params[findableIndex];
+                        console.log('findableVar: ' + findableVar + ' = ' + foundItem);
                         findableVars[findableVar].results.push(foundItem);
                     }
                 }
             }
         }
+
+        // If NO result has been found output false
+        if(!resultFound && findableVars.length == 0){
+            prologData.queryResult.push("FALSE");
+        }
+
+        console.log(findableVars);
+        // Output found result
+        var result = "";
+         for(var foundVar in findableVars){
+             if(findableVars.hasOwnProperty(foundVar)){
+                 findableVars[foundVar].results.forEach(function(item){
+                     result += foundVar + ": " + item + "\n";
+                 });
+             }
+         }
+         if(result == ""){
+             prologData.queryResult.push("FALSE");
+         } else{
+             prologData.queryResult.push(result);
+         }
     }
 
     function findUnifiedFacts(queryItem){
@@ -265,6 +305,18 @@ $(function(){
             }
         }
         return result;
+    }
+
+    function scrollToBottom(){
+        setTimeout(function(){
+            var $queryHistory = $('#queryHistory');
+            var scrollHeight = $queryHistory[0].scrollHeight;
+            $queryHistory.scrollTop(scrollHeight);
+
+            var $queryResult = $('#queryResult');
+            scrollHeight = $queryResult[0].scrollHeight;
+            $queryResult.scrollTop(scrollHeight);
+        },0)
     }
 });
 
