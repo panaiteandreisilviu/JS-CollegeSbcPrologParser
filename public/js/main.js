@@ -27,6 +27,7 @@ $(function(){
         interpretPrologData(xmlDoc);
         factsToJson(xmlDoc);
         rulesToJson(xmlDoc);
+        extractFactsFromRules();
     });
 
     function getXmlDoc(){
@@ -118,6 +119,54 @@ $(function(){
                 jsonRule.if.push(getPredicateAndVariablesJSON($(andRule)));
             });
             prologData.rulesJson.push(jsonRule);
+        });
+
+    }
+
+    function extractFactsFromRules(){
+        prologData.rulesJson.forEach(function(rule){
+            var resultParams = []; // array of objects like {X:'andrei', Y:'adrian', Z:'alina'}
+
+            var firstItem = true;
+            rule.if.forEach(function(ifItem){ // iterate trough all if items
+
+                // match with facts with the same predicate
+                prologData.factsJson.forEach(function(factItem){
+
+                    if(factItem.predicate == ifItem.predicate && factItem.params.length == ifItem.params.length){
+
+                        /*console.log(ifItem.predicate);
+                        console.log(ifItem.params);
+                        console.log(factItem.predicate);
+                        console.log(factItem.params);
+                        console.log(firstItem);
+                        console.log('----');*/
+
+                        if(firstItem){ // for the first if item get all facts that match
+                            var resultParamObj = {};
+                            factItem.params.forEach(function(factParam){
+                                var index = factItem.params.indexOf(factParam);
+                                var key = ifItem.params[index];
+                                resultParamObj[key] = factParam;
+                            });
+                            resultParams.push(resultParamObj);
+                        }
+
+                        else{
+                            console.log(ifItem.params);
+                            console.log(factItem.predicate);
+                            console.log(factItem.params);
+
+                            resultParams.forEach(function(resItem){
+                                console.log(resItem);
+                            });
+                            console.log('--------------');
+
+                        }
+                    }
+                });
+                firstItem = false;
+            });
         });
     }
 
@@ -212,7 +261,6 @@ $(function(){
                     if(fixedVarCheckOK){
                         // Match found, return true
                         resultFound = true;
-                        prologData.queryResult.push("TRUE");
                         break;
                     }
                 }
@@ -238,26 +286,29 @@ $(function(){
             }
         }
 
-        // If NO result has been found output false
-        if(!resultFound && findableVars.length == 0){
-            prologData.queryResult.push("FALSE");
-        }
 
         console.log(findableVars);
         // Output found result
         var result = "";
          for(var foundVar in findableVars){
              if(findableVars.hasOwnProperty(foundVar)){
+                 resultFound = true;
                  findableVars[foundVar].results.forEach(function(item){
                      result += foundVar + ": " + item + "\n";
                  });
              }
          }
-         if(result == ""){
-             prologData.queryResult.push("FALSE");
-         } else{
-             prologData.queryResult.push(result);
-         }
+
+        // If NO result has been found output false
+        if(!resultFound){
+            prologData.queryResult.push("FALSE");
+        } else{
+            if(result == ""){
+                prologData.queryResult.push("TRUE");
+            } else{
+                prologData.queryResult.push(result);
+            }
+        }
     }
 
     function findUnifiedFacts(queryItem){

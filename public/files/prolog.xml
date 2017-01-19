@@ -20,11 +20,18 @@
             <item>bogdan</item>
             <item>ioana</item>
         </parent>
+        <parent>
+            <item>ioana</item>
+            <item>alin</item>
+        </parent>
         <male>
             <item>bogdan</item>
         </male>
         <male>
             <item>ilie</item>
+        </male>
+        <male>
+            <item>andrei</item>
         </male>
         <female>
             <item>ioana</item>

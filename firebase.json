@@ -3,12 +3,6 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "public",
-    "redirects":[
-      {
-        "source" : "/sudoku",
-        "destination" : "/sudoku.html"
-      }
-    ]
+    "public": "public"
   }
 }
